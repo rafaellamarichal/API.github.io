@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chiste del Día</title>
+</head>
+<body>
+
+  <h1>Chiste del Día</h1>
+  
+  <div id="chisteContainer">
+    <!-- Aquí se mostrará el chiste -->
+  </div>
+
+  <button id="nuevoChisteBtn">Nuevo Chiste</button>
+
+  <script>
+    // Función para obtener y mostrar un nuevo chiste
+    function obtenerNuevoChiste() {
+      const apiUrl = 'https://v2.jokeapi.dev/joke/Any?lang=es';
+
+      // Realizar la solicitud HTTP para obtener el chiste
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          // Obtener el contenedor donde se mostrará el chiste
+          const chisteContainer = document.getElementById('chisteContainer');
+
+          // Verificar si se obtuvo un chiste
+          if (data.type === 'twopart') {
+            // Si es de dos partes, mostrar pregunta y respuesta
+            chisteContainer.innerHTML = `<p>Pregunta: ${data.setup}</p><p>Respuesta: ${data.delivery}</p>`;
+          } else if (data.type === 'single') {
+            // Si es un chiste simple, mostrar el chiste directamente
+            chisteContainer.innerHTML = `<p>${data.joke}</p>`;
+          } else {
+            // Si no se obtuvo un chiste, mostrar un mensaje
+            chisteContainer.innerHTML = '<p>No se obtuvo un chiste.</p>';
+          }
+        })
+        .catch(error => {
+          console.error('Error al obtener un chiste:', error);
+        });
+    }
+
+    // Obtener un nuevo chiste al cargar la página
+    obtenerNuevoChiste();
+
+    // Agregar un evento de clic al botón "Nuevo Chiste"
+    const nuevoChisteBtn = document.getElementById('nuevoChisteBtn');
+    nuevoChisteBtn.addEventListener('click', obtenerNuevoChiste);
+  </script>
+
+</body>
+</html>
